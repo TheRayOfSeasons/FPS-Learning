@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -11,6 +12,12 @@ public class Enemy : MonoBehaviour
     public float attackSpeed = 2f;
     public float interval = 2f;
     public float timer = 2f;
+    public NavMeshAgent agent;
+
+    void Start()
+    {
+        this.agent = this.GetComponent<NavMeshAgent>();
+    }
 
     void Shoot()
     {
@@ -24,7 +31,15 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         this.transform.LookAt(this.player.transform);
-
+        float distance = Vector3.Distance(this.player.transform.position, this.transform.position);
+        if (distance >= 5f)
+        {
+            this.agent.destination = this.player.transform.position;
+        }
+        else
+        {
+            this.agent.destination = this.transform.position;
+        }
         this.timer -= Time.deltaTime;
         if (this.timer <= 0f)
         {

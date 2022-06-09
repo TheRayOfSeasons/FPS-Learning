@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 2959086196261456f939904a633b0f1a, type: 2}
 --- !u!1 &301060980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040,6 +1040,7 @@ GameObject:
   - component: {fileID: 2024795179}
   - component: {fileID: 2024795178}
   - component: {fileID: 2024795176}
+  - component: {fileID: 2024795182}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -1066,6 +1067,7 @@ MonoBehaviour:
   attackSpeed: 2
   interval: 2
   timer: 2
+  agent: {fileID: 0}
 --- !u!136 &2024795178
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1146,6 +1148,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &2024795182
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2024795175}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1001 &2084445384
 PrefabInstance:
   m_ObjectHideFlags: 0
