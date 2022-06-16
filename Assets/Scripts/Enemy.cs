@@ -22,8 +22,10 @@ public class Enemy : MonoBehaviour
     void Shoot()
     {
         GameObject bullet = Instantiate(bulletPrefab);
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
         Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
         bullet.transform.position = this.front.transform.position;
+        bulletScript.origin = this.gameObject;
         Vector3 direction = (this.player.transform.position - this.front.transform.position).normalized;
         rigidbody.AddForce(direction * 2000f);
     }
@@ -48,17 +50,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    public void Hit(float damage)
     {
-        if (collision.gameObject.tag == "Bullet")
+        health -= damage;
+        if (health <= 0f)
         {
-            GameObject bullet = collision.gameObject;
-            float damage = bullet.GetComponent<Bullet>().damage;
-            health -= damage;
-            if (health <= 0f)
-            {
-                Die();
-            }
+            Die();
         }
     }
 
