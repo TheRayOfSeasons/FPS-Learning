@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class UIManager : MonoBehaviour
     }
 
     public GameObject panel;
+    public Text ammoCount;
+    public Text playerHealth;
 
     void Awake()
     {
@@ -20,5 +23,15 @@ public class UIManager : MonoBehaviour
     public void ToggleDiedScreen(bool toggle)
     {
         this.panel.SetActive(toggle);
+    }
+
+    public void SetAmmo(int count)
+    {
+        this.ammoCount.text = $"Ammo: {count}";
+    }
+
+    public void SetPlayerHealth(float health)
+    {
+        this.playerHealth.text = $"Health: {health}";
     }
 }
