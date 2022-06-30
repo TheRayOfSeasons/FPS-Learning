@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+public enum Movement
+{
+    IDLE,
+    PATROLLING,
+    HOSTILE
+}
+
+
 public class Enemy : MonoBehaviour
 {
     public float health = 3f;
@@ -13,10 +22,28 @@ public class Enemy : MonoBehaviour
     public float interval = 2f;
     public float timer = 2f;
     public NavMeshAgent agent;
+    public Movement movement = Movement.IDLE;
+    public float movementRange = 5f;
+    private Vector3 patrolLocation;
+
+
+    private void AssignNextPatrolLocation()
+    {
+        float x = this.transform.position.x;
+        float y = this.transform.position.y;
+        float z = this.transform.position.z;
+        this.patrolLocation = new Vector3(
+            Random.Range(x - this.movementRange, x + this.movementRange),
+            y,
+            Random.Range(z - this.movementRange, z + this.movementRange)
+        );
+    }
 
     void Start()
     {
+        GameManager.Instance.IncrementEnemyCount();
         this.agent = this.GetComponent<NavMeshAgent>();
+        this.AssignNextPatrolLocation();
     }
 
     void Shoot()
@@ -30,9 +57,28 @@ public class Enemy : MonoBehaviour
         rigidbody.AddForce(direction * 2000f);
     }
 
-    void Update()
+    void DoIdle()
     {
-        this.transform.LookAt(this.player.transform);
+        this.agent.isStopped = true;
+        this.agent.destination = this.transform.position;
+    }
+
+    void DoPatrol()
+    {
+        this.agent.destination = this.patrolLocation;
+        float distanceFromDestination = Vector3.Distance(
+            this.transform.position,
+            this.patrolLocation
+        );
+        Debug.Log(distanceFromDestination);
+        if (distanceFromDestination < 1f)
+        {
+            this.AssignNextPatrolLocation();
+        }
+    }
+
+    void DoHostile()
+    {
         float distance = Vector3.Distance(this.player.transform.position, this.transform.position);
         if (distance >= 5f)
         {
@@ -42,12 +88,45 @@ public class Enemy : MonoBehaviour
         {
             this.agent.destination = this.transform.position;
         }
-        this.timer -= Time.deltaTime;
+    }
+
+    void DoAction()
+    {
+        switch(this.movement)
+        {
+            case Movement.IDLE:
+                this.DoIdle();
+                break;
+            case Movement.PATROLLING:
+                this.DoPatrol();
+                break;
+            case Movement.HOSTILE:
+                this.DoHostile();
+                this.Attack();
+                break;
+        }
+    }
+
+    void Attack()
+    {
         if (this.timer <= 0f)
         {
             this.Shoot();
             this.timer = this.interval;
         }
+    }
+
+    void Update()
+    {
+        this.timer -= Time.deltaTime;
+        this.DoAction();
+        this.transform.LookAt(
+            new Vector3(
+                this.agent.destination.x,
+                this.transform.position.y,
+                this.transform.position.z
+            )
+        );
     }
 
     public void Hit(float damage)
@@ -61,6 +140,15 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        GameManager.Instance.DecrementEnemyCount();
         Destroy(this.gameObject);
+    }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Player")
+        {
+            this.movement = Movement.HOSTILE;
+        }
     }
 }

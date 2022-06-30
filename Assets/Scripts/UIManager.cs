@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     }
 
     public GameObject panel;
+    public GameObject winPanel;
     public Text ammoCount;
     public Text playerHealth;
 
@@ -23,6 +24,11 @@ public class UIManager : MonoBehaviour
     public void ToggleDiedScreen(bool toggle)
     {
         this.panel.SetActive(toggle);
+    }
+
+    public void ToggleWinScreen(bool toggle)
+    {
+        this.winPanel.SetActive(toggle);
     }
 
     public void SetAmmo(int count)
